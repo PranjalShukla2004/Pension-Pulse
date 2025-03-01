@@ -5,6 +5,7 @@
 # List of parameters to assigned to each customer
 # Query the database for the parameters
 # Return the parameters to the frontend
+# components : Input Component, Plot Component
 app = FastAPI()
 
 @app.get("/name")
