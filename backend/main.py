@@ -1,37 +1,30 @@
+import io
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-from datetime import datetime
-import random
+from fastapi.responses import StreamingResponse
+import matplotlib.pyplot as plt
 
 app = FastAPI()
 
-# Allow React's development server to access this API
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    # Add more origins as needed
-]
+@app.get("/api/graph-image")
+async def get_graph_image():
+    # Create a sample graph using matplotlib
+    plt.figure(figsize=(6, 4))
+    x = [1, 2, 3, 4, 5]
+    y = [10, 20, 15, 30, 25]
+    plt.plot(x, y, marker="o")
+    plt.title("Sample Graph")
+    plt.xlabel("X-axis")
+    plt.ylabel("Y-axis")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/api/graph-data")
-async def get_graph_data():
-    """
-    This endpoint simulates dynamic data for the graph.
-    Replace the dummy data with real data from your simulation or database.
-    """
-    data = {
-        "timestamp": datetime.now().isoformat(),
-        "values": [random.randint(10, 100) for _ in range(10)]  # Example data points
-    }
-    return data
+    # Save the plot to a BytesIO object
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    plt.close()  # Close the figure to free up memory
+    buf.seek(0)
+    
+    # Return the image as a StreamingResponse with content type image/png
+    return StreamingResponse(buf, media_type="image/png")
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
