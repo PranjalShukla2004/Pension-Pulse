@@ -1,16 +1,34 @@
 import React from 'react';
 
-function GraphComponent() {
-  // Directly use the URL of your backend endpoint.
-  // Ensure that the backend (FastAPI) is running on port 8000.
-  const imageUrl = "http://localhost:8000/api/graph-image";
+interface GraphComponentProps {
+  bankParam: string;
+  customerParam: string;
+}
 
+const GraphComponent: React.FC<GraphComponentProps> = ({ bankParam, customerParam }) => {
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div style={styles.container}>
       <h2>Graph Rendered from Backend</h2>
-      <img src={imageUrl} alt="Graph from backend" style={{ maxWidth: '100%' }} />
+      <p>
+        Y-axis: {bankParam ? bankParam : 'None selected'} <br />
+        X-axis: {customerParam ? customerParam : 'None selected'}
+      </p>
+      <img
+        src="http://localhost:8000/api/graph-image"
+        alt="Graph from backend"
+        style={styles.image}
+      />
     </div>
   );
-}
+};
+
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    textAlign: 'center',
+  },
+  image: {
+    maxWidth: '100%',
+  },
+};
 
 export default GraphComponent;
