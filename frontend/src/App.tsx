@@ -1,5 +1,5 @@
 import React from 'react';
-import GraphComponent from './Components/GraphComponent.tsx';
+import GraphComponent from './Components/GraphComponents';
 
 function App() {
   return (
