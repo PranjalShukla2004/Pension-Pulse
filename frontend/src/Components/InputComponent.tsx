@@ -51,3 +51,5 @@ function InputComponent() {
     </div>
   );
 }
+
+export default InputComponent;
