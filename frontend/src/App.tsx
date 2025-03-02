@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import TopBar from './Components/TopBar';
 import AgeSlider from './Components/SliderAge';
 import IncomeInput from './Components/TextInput';
+import ParameterSelector from './Components/Parameters';
 import GraphComponent from './Components/GraphComponents';
-import BankParams from './Components/BankParams';
-import CustomerParams from './Components/CustomerParams';
 
 function App() {
-  const [bankParam, setBankParam] = useState<string>('');
-  const [customerParam, setCustomerParam] = useState<string>('');
+  // "Live" states that track the current radio selections
+  const [bankParam, setBankParam] = useState('');
+  const [customerParam, setCustomerParam] = useState('');
+
+  // "Submitted" states that define what's actually passed to the Graph
+  const [submittedBankParam, setSubmittedBankParam] = useState('');
+  const [submittedCustomerParam, setSubmittedCustomerParam] = useState('');
+
+  // Handle the user clicking Submit in ParameterSelector
+  const handleSubmit = () => {
+    setSubmittedBankParam(bankParam);
+    setSubmittedCustomerParam(customerParam);
+  };
 
   return (
     <div style={styles.app}>
@@ -18,15 +28,27 @@ function App() {
         <div style={styles.leftBox}>
           <h2 style={styles.leftBoxTitle}>Filtered Search</h2>
           <div style={styles.boxContent}>
+            {/* Restored slider and text input */}
             <AgeSlider />
             <IncomeInput />
-            <BankParams selected={bankParam} onChange={setBankParam} />
-            <CustomerParams selected={customerParam} onChange={setCustomerParam} />
+
+            {/* Combined parameter selector + submit button */}
+            <ParameterSelector
+              bankParam={bankParam}
+              setBankParam={setBankParam}
+              customerParam={customerParam}
+              setCustomerParam={setCustomerParam}
+              onSubmit={handleSubmit}
+            />
           </div>
         </div>
-        {/* Right box: Graph */}
+
+        {/* Right box: Graph (uses submitted parameters only) */}
         <div style={styles.rightBox}>
-          <GraphComponent bankParam={bankParam} customerParam={customerParam} />
+          <GraphComponent
+            bankParam={submittedBankParam}
+            customerParam={submittedCustomerParam}
+          />
         </div>
       </div>
     </div>
