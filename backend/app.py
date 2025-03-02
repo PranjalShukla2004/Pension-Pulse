@@ -57,7 +57,7 @@ def graph_image():
     # Fallback dummy data if necessary
     if not x_data or not y_data or len(x_data) != len(y_data):
         x_data = list(range(50))
-        y_data = [i+1 * 0.1 for i+1 in range(49)]
+        y_data = [i * 0.1 for i in range(50)]
     
     # Generate the plot
     plt.figure(figsize=(6, 4))
