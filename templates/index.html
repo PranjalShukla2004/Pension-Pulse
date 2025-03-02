@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Agent Relationships</title>
+    <!-- Include Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Include Bootstrap for styling -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+            padding: 0 5vw;
+            width: 90vw;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        #buttons {
+            margin-bottom: 20px;
+        }
+
+        /* Green button styling */
+        .btn-green {
+            background-color: #007f3b; /* Bootstrap success green */
+            color: black;
+            border: none;
+        }
+
+        .btn-green:hover {
+            background-color: #00743b; /* Darker green on hover */
+        }
+
+        .graph {
+            display: none; /* Hide all graphs by default */
+            width: 90vw;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .graph.active {
+            display: block; /* Show only the active graph */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Bank Agent Interest Rate Predictions</h1>
+        <div id="buttons"></div>
+        <div id="graphs"></div>
+    </div>
+
+    <script>
+        fetch('/get_relationships')
+            .then(response => response.json())
+            .then(data => {
+                const graphsDiv = document.getElementById('graphs');
+                const buttonsDiv = document.getElementById('buttons');
+                let firstGraph = true;
+                let graphElements = {};
+
+                for (const feature in data) {
+                    const { values, predictions } = data[feature];
+
+                    // Create button
+                    const button = document.createElement('button');
+                    button.classList.add('btn', 'btn-green', 'm-2'); // Use the green button class
+                    button.textContent = feature;
+                    button.onclick = () => {
+                        document.querySelectorAll('.graph').forEach(g => g.classList.remove('active'));
+                        graphElements[feature].classList.add('active');
+                        Plotly.relayout(graphElements[feature], { autosize: true }); // Force resizing
+                    };
+                    buttonsDiv.appendChild(button);
+
+                    // Create graph container
+                    const graphDiv = document.createElement('div');
+                    graphDiv.classList.add('graph');
+                    if (firstGraph) {
+                        graphDiv.classList.add('active'); // Show first graph by default
+                        firstGraph = false;
+                    }
+                    graphsDiv.appendChild(graphDiv);
+                    graphElements[feature] = graphDiv; // Store reference for easy access
+
+                    // Plot graph
+                    const trace = {
+                        x: values,
+                        y: predictions,
+                        mode: 'lines',
+                        name: feature,
+                        line: { color: 'blue', width: 2 }
+                    };
+
+                    const layout = {
+                        title: `Interest Rate vs ${feature}`,
+                        xaxis: { title: feature },
+                        yaxis: { title: 'Predicted Interest Rate' },
+                        showlegend: false
+                    };
+
+                    Plotly.newPlot(graphDiv, [trace], layout);
+                }
+            })
+            .catch(err => console.error('Error fetching data:', err));
+    </script>
+</body>
+</html>
