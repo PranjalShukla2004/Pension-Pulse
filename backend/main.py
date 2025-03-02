@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+from model import train_agents
+
 
 app = FastAPI()
 
@@ -16,6 +18,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+if not os.path.exists("models/model.db"):
+    train_agents()
+
 
 # Use an absolute path for the database file
 db_path = os.path.join(os.path.dirname(__file__), "users.db")
@@ -33,9 +38,8 @@ async def get_graph_image(x_axis: str = Query(...), y_axis: str = Query(...)):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
 
-    # Validate/sanitize input to prevent SQL injection
-    allowed_customer_cols = {"Age", "Income", "Capital", "Market_Knowledge"}
-    allowed_bank_cols = {"Alpha", "Beta"}
+    allowed_customer_cols = {"Wealth", "RiskTolerance", "Loyalty", "Inflation", "GDP"}
+    allowed_bank_cols = {"Rate", "Profit"}
 
     # Fetch x_data from USERTABLE
     if x_axis in allowed_customer_cols:
