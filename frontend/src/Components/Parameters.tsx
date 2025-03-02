@@ -1,105 +1,73 @@
 import React from 'react';
 
 interface ParameterSelectorProps {
-  bankParam: string;
-  setBankParam: (val: string) => void;
-  customerParam: string;
-  setCustomerParam: (val: string) => void;
+  plotType: string;
+  setPlotType: (val: string) => void;
   onSubmit: () => void; // Callback to finalize changes
 }
 
 const ParameterSelector: React.FC<ParameterSelectorProps> = ({
-  bankParam,
-  setBankParam,
-  customerParam,
-  setCustomerParam,
+  plotType,
+  setPlotType,
   onSubmit,
 }) => {
-  const handleBankChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBankParam(e.target.value);
-  };
-
-  const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerParam(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPlotType(e.target.value);
   };
 
   return (
     <div style={styles.container}>
+      <h3 style={styles.heading}>Select Plot Type</h3>
       <div style={styles.paramGroup}>
-        <h3 style={styles.heading}>Bank Parameters</h3>
         <label style={styles.radioLabel}>
           <input
             type="radio"
-            name="bankParam"
-            value="alpha"
-            checked={bankParam === 'alpha'}
-            onChange={handleBankChange}
+            name="plotType"
+            value="ir_vs_wealth"
+            checked={plotType === 'ir_vs_wealth'}
+            onChange={handleChange}
           />
-          alpha (fixed rate)
+          Interest Rate vs. Wealth
         </label>
         <label style={styles.radioLabel}>
           <input
             type="radio"
-            name="bankParam"
-            value="beta"
-            checked={bankParam === 'beta'}
-            onChange={handleBankChange}
+            name="plotType"
+            value="ir_vs_risk"
+            checked={plotType === 'ir_vs_risk'}
+            onChange={handleChange}
           />
-          beta (Libor multiplier)
+          Interest Rate vs. Risk
         </label>
         <label style={styles.radioLabel}>
           <input
             type="radio"
-            name="bankParam"
-            value="netProfit"
-            checked={bankParam === 'netProfit'}
-            onChange={handleBankChange}
+            name="plotType"
+            value="loyalty_vs_ir"
+            checked={plotType === 'loyalty_vs_ir'}
+            onChange={handleChange}
           />
-          net profit at some time stamp
-        </label>
-      </div>
-
-      <div style={styles.paramGroup}>
-        <h3 style={styles.heading}>Customer Parameters</h3>
-        <label style={styles.radioLabel}>
-          <input
-            type="radio"
-            name="customerParam"
-            value="Age"
-            checked={customerParam === 'Age'}
-            onChange={handleCustomerChange}
-          />
-          Age
+          Loyalty vs. Interest Rate
         </label>
         <label style={styles.radioLabel}>
           <input
             type="radio"
-            name="customerParam"
-            value="Income"
-            checked={customerParam === 'Income'}
-            onChange={handleCustomerChange}
+            name="plotType"
+            value="gdp_vs_ir"
+            checked={plotType === 'gdp_vs_ir'}
+            onChange={handleChange}
           />
-          Income
+          GDP vs. Interest Rate
         </label>
         <label style={styles.radioLabel}>
           <input
             type="radio"
-            name="customerParam"
-            value="Knowledge"
-            checked={customerParam === 'Knowledge'}
-            onChange={handleCustomerChange}
+            name="plotType"
+            value="ir_vs_inflation"
+            checked={plotType === 'ir_vs_inflation'}
+            onChange={handleChange}
           />
-          Knowledge
-        </label>
-        <label style={styles.radioLabel}>
-          <input
-            type="radio"
-            name="customerParam"
-            value="Capital"
-            checked={customerParam === 'Capital'}
-            onChange={handleCustomerChange}
-          />
-          Capital
+          Interest Rate vs. Inflation
         </label>
       </div>
 
@@ -120,15 +88,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '0.5rem',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   },
-  paramGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.3rem',
-  },
   heading: {
     fontSize: '1.1rem',
     fontWeight: 'bold',
     marginBottom: '0.5rem',
+  },
+  paramGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.3rem',
   },
   radioLabel: {
     display: 'flex',
